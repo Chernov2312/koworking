@@ -3,8 +3,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AppConfig(BaseSettings):
-    ADMIN_USERNAME: str = 'ADMIN'
-    ADMIN_PASSWORD: str = 'PASSWORD'
+    ADMIN_USERNAME: str
+    ADMIN_PASSWORD: str
     POSTGRES_HOST: str
     POSTGRES_DB: str
     POSTGRES_USER: str
