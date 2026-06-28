@@ -19,8 +19,10 @@ from sqlalchemy.orm import (
 
 from config.settings import settings
 
-engine = create_async_engine(url=settings.get_db_url())
-async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
+engine = create_async_engine(url=settings.get_db_url)
+postgres_session_maker = async_sessionmaker(engine, expire_on_commit=False)
+
+current_session_maker = postgres_session_maker
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -45,9 +47,15 @@ class Base(AsyncAttrs, DeclarativeBase):
 def connection(method):
     @wraps(method)
     async def wrapper(*args, **kwargs):
-        async with async_session_maker() as session:
+        if 'session' in kwargs:
+            return await method(*args, **kwargs)
+
+        async with current_session_maker() as session:
             try:
-                return await method(*args, session=session, **kwargs)
+                kwargs['session'] = session
+                result = await method(*args, **kwargs)
+                await session.commit()
+                return result
             except Exception as e:
                 await session.rollback()
                 raise e
@@ -56,7 +64,7 @@ def connection(method):
 
 
 async def get_session() -> AsyncSession:
-    async with async_session_maker() as session:
+    async with postgres_session_maker() as session:
         yield session
 
 

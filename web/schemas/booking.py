@@ -2,7 +2,7 @@ __all__ = ()
 from datetime import date, time
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SlotResponse(BaseModel):
@@ -10,8 +10,7 @@ class SlotResponse(BaseModel):
     started_at: time = Field(..., description='Время начала слота')
     ended_at: time = Field(..., description='Время окончания слота')
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserBooking(BaseModel):
@@ -28,13 +27,13 @@ class BookingCreate(BaseModel):
 class BookingResponse(BaseModel):
     id: UUID = Field(..., description='ID созданной брони')
     user_id: UUID = Field(
-        ..., description='ID сотрудника, который совершил бронирование'
+        ...,
+        description='ID сотрудника, который совершил бронирование',
     )
     slot_id: UUID = Field(..., description='ID забронированного слота')
     booked_for: date = Field(..., description='Дата бронирования')
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class BookingDelete(BaseModel):
@@ -54,8 +53,8 @@ class FreeRoomsResponse(BaseModel):
     number: int = Field(..., description='Номер комнаты')
 
     slots: list[SlotResponse] = Field(
-        ..., description='Список доступных слотов в этой комнате'
+        ...,
+        description='Список доступных слотов в этой комнате',
     )
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

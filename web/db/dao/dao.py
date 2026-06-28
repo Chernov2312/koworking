@@ -2,7 +2,7 @@ __all__ = ()
 from datetime import date
 from uuid import UUID
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import contains_eager, joinedload
 
@@ -31,7 +31,10 @@ class UserDAO(BaseDAO):
     @classmethod
     @connection
     async def get_full_user_info(
-        cls, target_id: UUID, *, session: AsyncSession
+        cls,
+        target_id: UUID,
+        *,
+        session: AsyncSession,
     ):
         query = (
             select(User)
@@ -43,6 +46,21 @@ class UserDAO(BaseDAO):
         result = await session.execute(query)
         return result.scalars().first()
 
+    @classmethod
+    @connection
+    async def set_role(
+        cls,
+        target_id: UUID,
+        target_role: str,
+        *,
+        session: AsyncSession,
+    ):
+        query = (
+            update(User).where(User.id == target_id).values(role=target_role)
+        )
+        result = await session.execute(query)
+        return result.rowcount
+
 
 class RoomDAO(BaseDAO):
     model = Room
@@ -50,7 +68,10 @@ class RoomDAO(BaseDAO):
     @classmethod
     @connection
     async def get_all_free_room(
-        cls, date_to_check: date, *, session: AsyncSession
+        cls,
+        date_to_check: date,
+        *,
+        session: AsyncSession,
     ):
         occupied_slots = (
             select(Booking.slot_id)
@@ -76,7 +97,10 @@ class BookingDAO(BaseDAO):
     @classmethod
     @connection
     async def get_bookings_by_user_id(
-        cls, current_id: UUID, *, session: AsyncSession
+        cls,
+        current_id: UUID,
+        *,
+        session: AsyncSession,
     ):
         query = (
             select(Booking)

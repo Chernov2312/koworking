@@ -17,13 +17,16 @@ from db.database import Base
 
 class User(Base):
     username: Mapped[str] = mapped_column(
-        String(25), unique=True, nullable=False
+        String(25),
+        unique=True,
+        nullable=False,
     )
     password: Mapped[str] = mapped_column(String(250), nullable=False)
     role: Mapped[str] = mapped_column(String(), default='')
 
     bookings: Mapped[list['Booking']] = relationship(
-        'Booking', back_populates='user'
+        'Booking',
+        back_populates='user',
     )
 
 
@@ -39,7 +42,8 @@ class Room(Base):
 
 class Booking(Base):
     user_id: Mapped[UUID] = mapped_column(
-        ForeignKey('users.id', ondelete='CASCADE'), nullable=False
+        ForeignKey('users.id', ondelete='CASCADE'),
+        nullable=False,
     )
     slot_id: Mapped[UUID] = mapped_column(
         ForeignKey('slots.id', ondelete='CASCADE'),
@@ -74,5 +78,6 @@ class Slot(Base):
 
     room: Mapped['Room'] = relationship('Room', back_populates='slots')
     bookings: Mapped[list['Booking']] = relationship(
-        'Booking', back_populates='slot'
+        'Booking',
+        back_populates='slot',
     )

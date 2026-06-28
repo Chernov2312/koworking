@@ -15,7 +15,7 @@ exclude =
     /static/
     __init__.py
 
-ignore = N805, B008
+ignore = N805, B008, W503
 max-line-length = 79
 import-order-style = google
-application-import-names = web, api, config, db, schemas, core
+application-import-names = web, api, config, db, schemas, core, tests

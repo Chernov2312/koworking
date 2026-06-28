@@ -1,3 +1,4 @@
+__all__ = ()
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
@@ -15,9 +16,9 @@ from schemas.user import UserInDB, UserPD
 
 password_hash = PasswordHash.recommended()
 
-DUMMY_HASH = password_hash.hash("dummypassword")
+DUMMY_HASH = password_hash.hash('dummypassword')
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 app = FastAPI()
 
@@ -52,9 +53,11 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
+    to_encode.update({'exp': expire})
     encoded_jwt = jwt.encode(
-        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+        to_encode,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM,
     )
     return encoded_jwt
 
@@ -62,14 +65,16 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
+        detail='Could not validate credentials',
+        headers={'WWW-Authenticate': 'Bearer'},
     )
     try:
         payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
         )
-        username = payload.get("sub")
+        username = payload.get('sub')
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)

@@ -1,6 +1,5 @@
 __all__ = ()
 import re
-from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -18,18 +17,9 @@ class RegisterUser(BaseModel):
             raise ValueError('Пароль должен содержать не менее 8 символов')
         if not re.search(r'[A-Z]', value):
             raise ValueError(
-                'Пароль должен содержать хотя бы одну заглавную букву'
+                'Пароль должен содержать хотя бы одну заглавную букву',
             )
         return value
-
-    @field_validator('role')
-    @classmethod
-    def role_validate(cls, value: Optional[str]) -> Optional[str]:
-        if value is None:
-            return None
-        if value.lower() not in ['employee', 'admin']:
-            raise ValueError('Несуществующая роль. Допустимы: employee, admin')
-        return value.lower()
 
     @model_validator(mode='after')
     def validate_password(self):

@@ -22,6 +22,7 @@ class AppConfig(BaseSettings):
         case_sensitive=True,
     )
 
+    @property
     def get_db_url(self):
         return (
             f'postgresql+asyncpg://{self.POSTGRES_USER}'

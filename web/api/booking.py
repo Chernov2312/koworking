@@ -42,7 +42,7 @@ async def create_booking(
                 'user_id': user.id,
                 'slot_id': booking_data.slot_id,
                 'booked_for': booking_data.booked_for,
-            }
+            },
         )
         return new_booking
 
