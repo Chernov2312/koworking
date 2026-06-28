@@ -1,0 +1,21 @@
+[flake8]
+exclude = 
+    .git
+    __pycache__
+    .tox
+    .eggs
+    *.egg
+    .venv
+    venv
+    */site-packages/*
+    ./*/site-packages/*
+    ./.venv/*
+    ./*/migrations
+    manage.py
+    /static/
+    __init__.py
+
+ignore = N805, B008
+max-line-length = 79
+import-order-style = google
+application-import-names = web, api, config, db, schemas, core
