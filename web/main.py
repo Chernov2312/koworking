@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
     print('Остановка приложения и закрытие ресурсов...')
 
 
-app = FastAPI(lifespan=lifespan, title='ToDoList', version='1.0.0')
+app = FastAPI(lifespan=lifespan, title='Koworking', version='1.0.0')
 
 app.include_router(prefix='', router=core_router)
 app.include_router(prefix='/auth', router=auth_router)
