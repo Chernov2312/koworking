@@ -124,7 +124,8 @@ docker exec -it koworking-web-1 pytest web/tests/ -v
 ```
 
 ---
-```erDiagram
+```mermaid
+erDiagram
     USER {
         uuid id PK
         string username UK
